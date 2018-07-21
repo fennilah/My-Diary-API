@@ -5,7 +5,7 @@ app = FlaskAPI(__name__)
 
 @app.route('/', methods=['GET'])
 def home():
-    return 'Homepage'
+    return 'Home page'
 
 
 if __name__ == "__main__":
