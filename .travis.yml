@@ -1,0 +1,26 @@
+language: python
+python:
+    - "2.7"
+
+sudo: false
+cache:
+    directories:
+        - "~/.testcache"
+
+install:
+    - pip install -U pytest
+    - pip install -U pylint
+    - pip install -U coverage
+
+
+script:
+    - echo "Linting..."
+    - pylint mydiary.py
+    - echo "Installing dependencies"
+    - pip install -r requirements.txt
+    - echo "Running Tests"
+    - cd tests/
+    - pytest -q test.py
+    - echo "Getting Cov"
+    - coverage run test.py
+    - coverage report -m
