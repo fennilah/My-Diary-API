@@ -1,5 +1,12 @@
 # My-Diary-APIs
 
+[![Build Status](https://travis-ci.com/fennilah/My-Diary-API.svg?branch=develop)](https://travis-ci.com/fennilah/My-Diary-API)
+
+
+
+
+
+
 * Requirements
 
 flask API
