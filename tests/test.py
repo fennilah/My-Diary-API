@@ -1,28 +1,53 @@
 import pytest
-import conftest
+
+BASE_URL = 'api/v1'
+
+SAMPLE_TEST_DATA = {
+    'id': 100,
+    'title': u'Shopping',
+    'text': u'I went shopping',
+}
+
 
 @pytest.fixture
 def app():
-    app = conftest.create_app()
+    app = app()
     app.debug = True
     return app.test_client()
 
-def test_get_home_page(app):
+
+def test_home_page(app):
     response = app.get('/')
     assert response.status_code == 200
-    assert b"Home page" in response.data
+    assert 'Home Page' in str(response.data)    
 
-def test_gets_all_project(app):
-    response = app.get('api/v1/projects/accounts/1059760')
-    assert response.status_code == 200
-    assert len(response.data) > 0
 
-def test_lists_stories_for_project(app):
-    response = app.get('/api/v1/projects/2186195/stories/list')  
-    assert response.status_code == 200
-    assert len(response.data) > 0
+def test_add_stories(app):
+   response = app.post('{}/stories?id={}&title={}&text={}'.format(BASE_URL, SAMPLE_TEST_DATA['id'], SAMPLE_TEST_DATA['title'], SAMPLE_TEST_DATA['text']))
+   assert response.status_code == 200
+   assert 'updated_at' in str(response.data)
+ 
 
-def test_edit_story(app):
-    response = app.put('/api/v1/projects/2186195/stories/159221866/edit')
-    assert response.status_code == 200
-    assert b"updated_at" in response.data  
+def test_edit_stories(app):
+   response = app.put('{}/stories/100?title=Shopping'.format(BASE_URL))
+   assert response.status_code == 200
+   assert 'walking' in str(response.data)
+   assert '100 walking I went shopping' in str(response.data)
+
+
+def test_delete_entries(app):
+   response = app.put('{}/stories?id={}'.format(BASE_URL, SAMPLE_TEST_DATA['id']))
+   assert response.status_code == 200
+   assert 'entries deleted' in str(response.data)  
+
+
+def test_list_entries(app):
+   response = app.get('{}/entries'.format(BASE_URL))
+   assert response.status_code == 200
+   assert 'list of entries' in str(response.data)>0    
+
+
+
+
+
+
