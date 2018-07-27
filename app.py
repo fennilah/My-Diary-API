@@ -1,13 +1,13 @@
 from flask import request, url_for, jsonify
-
+from models import entry
 
 app = Flask_API(__name__)
 
 @app.route('/', methods=['GET'])
 
-def home_page():
+def Home_Page():
 
-@app.Errorhandler(404)
+@app.errorhandler('/', methods=['404'])
 
 def not_found(error=None):
     response = {
@@ -18,29 +18,27 @@ def not_found(error=None):
     res.status_code = 404
     return res
 
-@app.route('/api/v1/projects/accounts/<id>', methods=['GET'])
+@app.route('/api/v1/entries/<id>', methods=['GET'])
 
-def getAllProjects(id):
-    url = "https://www.pivotaltracker.com/services/v5/projects"
-    querystring = {"account_ids": str(id)}
+def getAllEntry():
+    querystring = {"account_id": str(id)}
     token_header = request.headers['X-TrackerToken']
 
     headers = {
         'X-TrackerToken': str(token_header),
         'Content-Type' : 'application/json'
         }
-    response = request.request("GET", url, headers=headers, params=querystring)
+    response = request.request("GET", headers=headers, params=querystring)
     return response.text
 
 
 @app.route('/api/v1/projects/create', methods=['POST'])
 
-def createProject():
-    projectName = request.json
-    url = "https://www.pivotaltracker.com/services/v5/projects"
+def getspecificEntry():
+    entryName = request.json
     token_header = request.headers['X-TrackerToken']
 
-    payload = projectName
+    payload = entryName
     headers = {
         'X-TrackerToken': str(token_header),
         }
@@ -50,7 +48,7 @@ def createProject():
 
 @app.route('/api/v1/projects/<id>/stories/create', methods=['POST'])
 
-def createStory(id):
+def createStory():
     storyDetails = request.json
     story_url = "https://www.pivotaltracker.com/services/v5/projects/"+ id +"/stories"
     token_header = request.headers['X-TrackerToken']
@@ -62,7 +60,7 @@ def createStory(id):
 
 @app.route('/api/v1/projects/<id>/stories/list', methods=['DELETE'])
 
-def listProjectStories(id):
+def listProjectStories():
     url = "https://www.pivotaltracker.com/services/v5/projects/"+2186196+"/stories"
     token_header = request.headers['X-TrackerToken']
     headers = {
